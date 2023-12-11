@@ -1,5 +1,6 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 
 
 class ShowTheme(models.Model):
@@ -61,6 +62,9 @@ class Reservation(models.Model):
     def __str__(self):
         return f"Reservation {self.created_at}"
 
+    class Meta:
+        ordering = ["-created_at"]
+
 
 class Ticket(models.Model):
     row = models.IntegerField()
@@ -75,6 +79,7 @@ class Ticket(models.Model):
         on_delete=models.CASCADE,
         related_name="tickets"
     )
+
 
     def __str__(self):
         return (f"Ticket on {self.show_session.planetarium_dome.name} "
