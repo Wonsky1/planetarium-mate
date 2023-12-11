@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
@@ -67,7 +69,7 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
             OpenApiParameter(
                 "themes",
                 type={"type": "list", "items": {"type": "number"}},
-                description="Filter by genre id (ex. ?genres=2,5)",
+                description="Filter by themes id (ex. ?themes=2,5)",
             ),
             OpenApiParameter(
                 "title",
@@ -105,6 +107,41 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return ShowSessionListSerializer
         return ShowSessionSerializer
+
+    def get_queryset(self):
+        date = self.request.query_params.get("date")
+        show_id_str = self.request.query_params.get("show")
+
+        queryset = self.queryset
+
+        if date:
+            date = datetime.strptime(date, "%Y-%m-%d").date()
+            queryset = queryset.filter(show_time__date=date)
+
+        if show_id_str:
+            queryset = queryset.filter(astronomy_show_id=int(show_id_str))
+
+        return queryset
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "show",
+                type=OpenApiTypes.INT,
+                description="Filter by show id (ex. ?show=2)",
+            ),
+            OpenApiParameter(
+                "date",
+                type=OpenApiTypes.DATE,
+                description=(
+                        "Filter by datetime of Show Session "
+                        "(ex. ?date=2022-10-23)"
+                ),
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class ReservationPagination(PageNumberPagination):
