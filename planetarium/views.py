@@ -4,11 +4,24 @@ from rest_framework.pagination import PageNumberPagination
 
 from django.db.models import F, Count
 
-from planetarium.models import AstronomyShow, ShowTheme, PlanetariumDome, ShowSession, Reservation
+from planetarium.models import (
+    AstronomyShow,
+    ShowTheme,
+    PlanetariumDome,
+    ShowSession,
+    Reservation
+)
 from planetarium.permissions import IsAdminOrIfAuthenticatedReadOnly
-from planetarium.serializers import AstronomyShowSerializer, AstronomyShowListSerializer, ShowThemeSerializer, \
-    PlanetariumDomeSerializer, ShowSessionSerializer, ShowSessionListSerializer, ReservationSerializer, \
+from planetarium.serializers import (
+    AstronomyShowSerializer,
+    AstronomyShowListSerializer,
+    ShowThemeSerializer,
+    PlanetariumDomeSerializer,
+    ShowSessionSerializer,
+    ShowSessionListSerializer,
+    ReservationSerializer,
     ReservationListSerializer
+)
 
 
 class ShowThemeViewSet(viewsets.ModelViewSet):
@@ -40,8 +53,9 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         .select_related("astronomy_show", "planetarium_dome")
         .annotate(
             tickets_available=(
-            F("planetarium_dome__rows") * F("planetarium_dome__seats_in_row")
-            - Count("tickets")
+                F("planetarium_dome__rows")
+                * F("planetarium_dome__seats_in_row")
+                - Count("tickets")
             )
         )
     )
@@ -65,7 +79,8 @@ class ReservationViewSet(
     viewsets.GenericViewSet,
 ):
     queryset = Reservation.objects.prefetch_related(
-        "tickets__show_session__astronomy_show", "tickets__show_session__planetarium_dome"
+        "tickets__show_session__astronomy_show",
+        "tickets__show_session__planetarium_dome"
     )
     serializer_class = ReservationSerializer
     pagination_class = ReservationPagination

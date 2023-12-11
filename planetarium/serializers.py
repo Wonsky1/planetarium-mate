@@ -2,7 +2,14 @@ from rest_framework import serializers
 
 from django.db import transaction
 
-from planetarium.models import ShowTheme, AstronomyShow, PlanetariumDome, ShowSession, Reservation, Ticket
+from planetarium.models import (
+    ShowTheme,
+    AstronomyShow,
+    PlanetariumDome,
+    ShowSession,
+    Reservation,
+    Ticket
+)
 
 
 class ShowThemeSerializer(serializers.ModelSerializer):
@@ -38,7 +45,10 @@ class ShowSessionSerializer(serializers.ModelSerializer):
 
 
 class ShowSessionListSerializer(ShowSessionSerializer):
-    show_title = serializers.CharField(source="astronomy_show.title", read_only=True)
+    show_title = serializers.CharField(
+        source="astronomy_show.title",
+        read_only=True
+    )
     planetarium_dome_name = serializers.CharField(
         source="planetarium_dome.name", read_only=True
     )

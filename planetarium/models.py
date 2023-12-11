@@ -79,7 +79,6 @@ class Ticket(models.Model):
         related_name="tickets"
     )
 
-
     def __str__(self):
         return (f"Ticket on {self.show_session.planetarium_dome.name} "
                 f"row: {self.row}, seat: {self.seat}")

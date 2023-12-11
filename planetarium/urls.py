@@ -1,8 +1,13 @@
 from django.urls import path, include
 from rest_framework import routers
 
-from planetarium.views import AstronomyShowViewSet, ShowThemeViewSet, PlanetariumDomeViewSet, ShowSessionViewSet, \
+from planetarium.views import (
+    AstronomyShowViewSet,
+    ShowThemeViewSet,
+    PlanetariumDomeViewSet,
+    ShowSessionViewSet,
     ReservationViewSet
+)
 
 router = routers.DefaultRouter()
 router.register("astronomy_shows", AstronomyShowViewSet)
