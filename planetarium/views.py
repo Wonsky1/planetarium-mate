@@ -1,7 +1,8 @@
 from rest_framework import viewsets
 
-from planetarium.models import AstronomyShow, ShowTheme
-from planetarium.serializers import AstronomyShowSerializer, AstronomyShowListSerializer, ShowThemeSerializer
+from planetarium.models import AstronomyShow, ShowTheme, PlanetariumDome
+from planetarium.serializers import AstronomyShowSerializer, AstronomyShowListSerializer, ShowThemeSerializer, \
+    PlanetariumDomeSerializer
 
 
 class ShowThemeViewSet(viewsets.ModelViewSet):
@@ -17,3 +18,8 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return AstronomyShowListSerializer
         return AstronomyShowSerializer
+
+
+class PlanetariumDomeViewSet(viewsets.ModelViewSet):
+    queryset = PlanetariumDome.objects.all()
+    serializer_class = PlanetariumDomeSerializer
