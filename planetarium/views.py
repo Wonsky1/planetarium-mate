@@ -2,6 +2,9 @@ from rest_framework import viewsets, mixins
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.pagination import PageNumberPagination
 
+from drf_spectacular.types import OpenApiTypes
+from drf_spectacular.utils import extend_schema, OpenApiParameter
+
 from django.db.models import F, Count
 
 from planetarium.models import (
@@ -58,6 +61,23 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return AstronomyShowListSerializer
         return AstronomyShowSerializer
+
+    @extend_schema(
+        parameters=[
+            OpenApiParameter(
+                "themes",
+                type={"type": "list", "items": {"type": "number"}},
+                description="Filter by genre id (ex. ?genres=2,5)",
+            ),
+            OpenApiParameter(
+                "title",
+                type=OpenApiTypes.STR,
+                description="Filter by show title (ex. ?title=earth)",
+            ),
+        ]
+    )
+    def list(self, request, *args, **kwargs):
+        return super().list(request, *args, **kwargs)
 
 
 class PlanetariumDomeViewSet(viewsets.ModelViewSet):
