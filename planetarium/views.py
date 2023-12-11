@@ -5,21 +5,22 @@ from rest_framework.pagination import PageNumberPagination
 from django.db.models import F, Count
 
 from planetarium.models import AstronomyShow, ShowTheme, PlanetariumDome, ShowSession, Reservation
+from planetarium.permissions import IsAdminOrIfAuthenticatedReadOnly
 from planetarium.serializers import AstronomyShowSerializer, AstronomyShowListSerializer, ShowThemeSerializer, \
     PlanetariumDomeSerializer, ShowSessionSerializer, ShowSessionListSerializer, ReservationSerializer, \
     ReservationListSerializer
-
-# TODO: permission_class
 
 
 class ShowThemeViewSet(viewsets.ModelViewSet):
     queryset = ShowTheme.objects.all()
     serializer_class = ShowThemeSerializer
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
 
 class AstronomyShowViewSet(viewsets.ModelViewSet):
     queryset = AstronomyShow.objects.prefetch_related("themes")
     serializer_class = AstronomyShowSerializer
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_serializer_class(self):
         if self.action == "list":
@@ -30,6 +31,7 @@ class AstronomyShowViewSet(viewsets.ModelViewSet):
 class PlanetariumDomeViewSet(viewsets.ModelViewSet):
     queryset = PlanetariumDome.objects.all()
     serializer_class = PlanetariumDomeSerializer
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
 
 class ShowSessionViewSet(viewsets.ModelViewSet):
@@ -44,6 +46,7 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         )
     )
     serializer_class = ShowSessionSerializer
+    permission_classes = [IsAdminOrIfAuthenticatedReadOnly, ]
 
     def get_serializer_class(self):
         if self.action == "list":
