@@ -3,7 +3,6 @@ from rest_framework import serializers
 from django.db import transaction
 
 from planetarium.models import ShowTheme, AstronomyShow, PlanetariumDome, ShowSession, Reservation, Ticket
-from django.core.exceptions import ValidationError
 
 
 class ShowThemeSerializer(serializers.ModelSerializer):
