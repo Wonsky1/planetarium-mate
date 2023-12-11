@@ -1,10 +1,15 @@
-from rest_framework import viewsets
+from rest_framework import viewsets, mixins
+from rest_framework.permissions import IsAuthenticated
+from rest_framework.pagination import PageNumberPagination
 
 from django.db.models import F, Count
 
-from planetarium.models import AstronomyShow, ShowTheme, PlanetariumDome, ShowSession
+from planetarium.models import AstronomyShow, ShowTheme, PlanetariumDome, ShowSession, Reservation
 from planetarium.serializers import AstronomyShowSerializer, AstronomyShowListSerializer, ShowThemeSerializer, \
-    PlanetariumDomeSerializer, ShowSessionSerializer, ShowSessionListSerializer
+    PlanetariumDomeSerializer, ShowSessionSerializer, ShowSessionListSerializer, ReservationSerializer, \
+    ReservationListSerializer
+
+# TODO: permission_class
 
 
 class ShowThemeViewSet(viewsets.ModelViewSet):
@@ -44,3 +49,33 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
         if self.action == "list":
             return ShowSessionListSerializer
         return ShowSessionSerializer
+
+
+class ReservationPagination(PageNumberPagination):
+    page_size = 10
+    max_page_size = 100
+
+
+class ReservationViewSet(
+    mixins.ListModelMixin,
+    mixins.CreateModelMixin,
+    viewsets.GenericViewSet,
+):
+    queryset = Reservation.objects.prefetch_related(
+        "tickets__show_session__astronomy_show", "tickets__show_session__planetarium_dome"
+    )
+    serializer_class = ReservationSerializer
+    pagination_class = ReservationPagination
+    permission_classes = (IsAuthenticated,)
+
+    def get_queryset(self):
+        return Reservation.objects.filter(user=self.request.user)
+
+    def get_serializer_class(self):
+        if self.action == "list":
+            return ReservationListSerializer
+
+        return ReservationSerializer
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
