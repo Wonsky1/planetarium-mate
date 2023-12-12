@@ -1,6 +1,10 @@
+import os
+import uuid
+
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.utils.text import slugify
 
 
 class ShowTheme(models.Model):
@@ -10,19 +14,30 @@ class ShowTheme(models.Model):
         return self.name
 
 
+def movie_image_file_path(instance, filename):
+    _, extension = os.path.splitext(filename)
+    filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
+
+    return os.path.join("uploads/movies/", filename)
+
+
 class AstronomyShow(models.Model):
     title = models.CharField(max_length=255)
     description = models.TextField()
     themes = models.ManyToManyField(ShowTheme, related_name="astronomy_shows")
+    image = models.ImageField(null=True, upload_to=movie_image_file_path)
 
     def __str__(self):
         return self.title
+
+    class Meta:
+        ordering = ("title", )
 
 
 class PlanetariumDome(models.Model):
     name = models.CharField(max_length=255)
     rows = models.IntegerField()
-    seats_in_row = models.IntegerField()  # TODO: IMPLEMENT CONSTRAINS
+    seats_in_row = models.IntegerField()
 
     @property
     def capacity(self) -> int:
