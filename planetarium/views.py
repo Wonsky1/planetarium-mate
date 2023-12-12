@@ -134,8 +134,8 @@ class ShowSessionViewSet(viewsets.ModelViewSet):
                 "date",
                 type=OpenApiTypes.DATE,
                 description=(
-                        "Filter by datetime of Show Session "
-                        "(ex. ?date=2022-10-23)"
+                    "Filter by datetime of Show Session "
+                    "(ex. ?date=2022-10-23)"
                 ),
             ),
         ]
