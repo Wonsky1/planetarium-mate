@@ -6,6 +6,9 @@ from drf_spectacular.views import (
     SpectacularRedocView,
 )
 
+from django.conf.urls.static import static
+
+from planetarium_service import settings
 
 urlpatterns = [
     path("admin/", admin.site.urls),
@@ -25,4 +28,4 @@ urlpatterns = [
         SpectacularRedocView.as_view(url_name="schema"),
         name="redoc",
     ),
-]
+] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
