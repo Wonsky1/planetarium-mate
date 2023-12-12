@@ -1,4 +1,7 @@
+SECRET_KEY=SECRET_KEY
 POSTGRES_HOST=db
 POSTGRES_DB=app
 POSTGRES_USER=postgres
 POSTGRES_PASSWORD=secretpassword
+; MEDIA_ROOT=/vol/web/media
+; DOCKER=True
