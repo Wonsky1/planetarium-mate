@@ -31,6 +31,27 @@ class AstronomyShowListSerializer(AstronomyShowSerializer):
     themes = serializers.StringRelatedField(many=True, read_only=True)
 
 
+class AstronomyShowDetailSerializer(AstronomyShowSerializer):
+    themes = ShowThemeSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = AstronomyShow
+        fields = (
+            "id",
+            "title",
+            "description",
+            "themes",
+            "image",
+        )
+
+
+class AstronomyShowImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = AstronomyShow
+        fields = ("id", "image")
+
+
+
 class PlanetariumDomeSerializer(serializers.ModelSerializer):
 
     class Meta:
