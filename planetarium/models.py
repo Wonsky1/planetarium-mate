@@ -1,10 +1,8 @@
-import os
-import uuid
-
 from django.db import models
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
-from django.utils.text import slugify
+
+from planetarium.utils.models_utils import movie_image_file_path
 
 
 class ShowTheme(models.Model):
@@ -12,13 +10,6 @@ class ShowTheme(models.Model):
 
     def __str__(self):
         return self.name
-
-
-def movie_image_file_path(instance, filename):
-    _, extension = os.path.splitext(filename)
-    filename = f"{slugify(instance.title)}-{uuid.uuid4()}{extension}"
-
-    return os.path.join("uploads/movies/", filename)
 
 
 class AstronomyShow(models.Model):
